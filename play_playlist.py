@@ -19,9 +19,8 @@ mylcd.lcd_clear()
 def UpdateLCD():
     last_title = song_title
 
-    mylcd.lcd_display_string(player_title,1)
-
     while True:
+        mylcd.lcd_display_string(player_title,1)
         if song_title != last_title:
             last_title = song_title
         for i in range (0, len(last_title)):
