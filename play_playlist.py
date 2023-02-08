@@ -7,8 +7,8 @@ mylcd = I2C_LCD_Driver.lcd()
 
 channel = 87.5
 
-folder = '/home/senal/music/mac_miller/circles'
-cd = '/home/senal/fm_transmitter'
+folder = '/home/user/music/artist/album'
+cd = '/home/user/fm_transmitter'
 
 while True:
     files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
