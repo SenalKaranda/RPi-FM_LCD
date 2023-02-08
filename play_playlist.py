@@ -16,14 +16,11 @@ str_pad = " " * 16
 
 mylcd.lcd_clear()
 
-song_title = "Music Player"
-mylcd.lcd_display_string(song_title,1)
-
-song_title = "Loading"
-
 def UpdateLCD():
-    global song_title
     last_title = song_title
+
+    mylcd.lcd_display_string(player_title,1)
+
     while True:
         if song_title != last_title:
             last_title = song_title
@@ -35,13 +32,24 @@ def UpdateLCD():
         sleep(0.1)
 
 def main():
+    global song_title
+    global last_title
+    global player_title
+    
+    player_title = "Music Player"
+    song_title = "Loading"
+    last_title = "none"
+
+    mylcd.lcd_display_string(player_title,1)
+    
+    daemon = Thread(target=UpdateLCD, daemon=True, name="SongTitle")
+    daemon.start()
+    
+    sleep(5.0)
     while True:
         files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
 
         os.chdir(cd)
-    
-        daemon = Thread(target=UpdateLCD, daemon=True, name="SongTitle")
-        daemon.start()
     
         for file in files:
             file_path = os.path.join(folder, file)
@@ -54,6 +62,7 @@ def main():
         
             processFM = subprocess.Popen(['sudo', './fm_transmitter', '-f', str(channel), file_path], stdout=subprocess.PIPE)
             processFM.wait()
+            
             if processFM.returncode == 0:
                 mylcd.lcd_clear()
                 continue
